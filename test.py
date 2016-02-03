@@ -32,7 +32,7 @@ def get_face_mask(im, landmarks):
         hull = cv2.convexHull(landmarks[group])
         cv2.fillConvexPoly(im, hull, 0) 
 
-img = cv2.imread('o.jpg')
+img = cv2.imread('o2.jpg')
 img_copy = img.copy()
 landmarks = get_landmarks(img)
 
@@ -54,7 +54,7 @@ cv2.putText(img,'CntArea = '+str(M['m00']),(10,550), font, 1,(255,0,0),2,16)
 for each_val in M:
 	print each_val, ' : ',M[each_val]
 
-cv2.imwrite('output_o.jpg',img)
+cv2.imwrite('output_o2.jpg',img)
 
 
 cv2.imshow('Mask',img_copy)
