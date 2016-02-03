@@ -32,7 +32,7 @@ def get_face_mask(im, landmarks):
         hull = cv2.convexHull(landmarks[group])
         cv2.fillConvexPoly(im, hull, 0) 
 
-img = cv2.imread('e.jpg')
+img = cv2.imread('o.jpg')
 img_copy = img.copy()
 landmarks = get_landmarks(img)
 
@@ -42,16 +42,24 @@ output_img = img-img_copy
 output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
 contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
 cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
+
 cnt = contours[0]
 M = cv2.moments(cnt)
+cx = int(M['m10']/M['m00'])
+cy = int(M['m01']/M['m00'])
+
+font = cv2.FONT_HERSHEY_SIMPLEX
+cv2.putText(img,'Centroid = ('+str(cx)+','+str(cy)+')',(10,500), font, 1,(255,0,0),2,16)
+cv2.putText(img,'CntArea = '+str(M['m00']),(10,550), font, 1,(255,0,0),2,16)
 for each_val in M:
 	print each_val, ' : ',M[each_val]
 
-cv2.imwrite('output_e.jpg',output_img)
+cv2.imwrite('output_o.jpg',img)
 
-cv2.imshow('Img',img)
+
 cv2.imshow('Mask',img_copy)
 cv2.imshow('Output', output_img)
+cv2.imshow('Img',img)
 
 cv2.waitKey()
 
