@@ -30,7 +30,10 @@ def draw_convex_hull(im, points, color):
 def get_face_mask(im, landmarks):
     #im = numpy.zeros(im.shape[:2], dtype=numpy.float64)
     for group in OVERLAY_POINTS:
-        draw_convex_hull(im,landmarks[group],color=1)
+    	#draw_convex_hull(im,landmarks[group],color=1)
+        hull = cv2.convexHull(landmarks[group])
+        cv2.fillConvexPoly(img, hull, 0) 
+        print hull
 
     #im = numpy.array([im, im, im]).transpose((1, 2, 0))
 
@@ -87,14 +90,17 @@ def transformation_from_points(points1, points2):
                                        c2.T - (s2 / s1) * R * c1.T)),
                          numpy.matrix([0., 0., 1.])])
 
-img = cv2.imread('test.jpg')
+img = cv2.imread('test4.jpg')
+img_copy = img.copy()
 landmarks = get_landmarks(img)
 
 mask = get_face_mask(img, landmarks)
 
 #cv2.bitwise_and(img,img,mask = mask)
 
-cv2.imshow('Mask',img)
+cv2.imshow('Img',img_copy)
+cv2.imshow('Mask',mask)
+cv2.imshow('Output',img_copy-mask)
 cv2.waitKey()
 
 #warped_mask = warp_im(mask, M, im1.shape)
