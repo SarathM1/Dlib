@@ -33,7 +33,7 @@ def get_face_mask(im, landmarks):
         hull = cv2.convexHull(landmarks[group])
         cv2.fillConvexPoly(im, hull, 0) 
 
-img = cv2.imread('e.jpg')
+img = cv2.imread('o3.jpg')
 img_copy = img.copy()
 landmarks = get_landmarks(img)
 
@@ -58,12 +58,18 @@ diff2 = abs(topmost[1] - bottommost[1])
 
 a = diff1/2
 b = diff2/2
+a2 = ma/2
+b2 = MA/2
 
 eccentricity = sqrt(pow(a,2)-pow(b,2))
 eccentricity = round(eccentricity/a,2)
 
+eccentricity2 = sqrt(pow(a2,2)-pow(b2,2))
+eccentricity2 = round(eccentricity2/a2,2)
+
 font = cv2.FONT_HERSHEY_SIMPLEX
 
+"""
 cv2.putText(img,'Leftmost = '+str(leftmost),(10,100), font, 1,(255,0,0),2,16)
 cv2.putText(img,'Rightmost = '+str(rightmost),(10,150), font, 1,(255,0,0),2,16)
 cv2.line(img,leftmost,rightmost,(255,0,0),2)
@@ -71,12 +77,12 @@ cv2.line(img,leftmost,rightmost,(255,0,0),2)
 cv2.putText(img,'Topmost = '+str(topmost),(10,200), font, 1,(255,0,0),2,16)
 cv2.putText(img,'Bottommost = '+str(bottommost),(10,250), font, 1,(255,0,0),2,16)
 cv2.line(img,topmost,bottommost,(255,0,0),2)
-
+"""
 cv2.putText(img,'Diff1 = '+str(diff1)+','+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
 cv2.putText(img,'Diff2 = '+str(diff2)+','+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-cv2.putText(img,'Eccentricity = '+str(eccentricity),(10,400), font, 1,(255,0,0),2,16)
+cv2.putText(img,'Eccentricity = '+str(eccentricity)+','+str(eccentricity2),(10,400), font, 1,(255,0,0),2,16)
 
-cv2.imwrite('output_e.jpg',img)
+cv2.imwrite('output_o3.jpg',img)
 
 
 cv2.imshow('Mask',img_copy)
