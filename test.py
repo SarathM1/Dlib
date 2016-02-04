@@ -1,6 +1,7 @@
 import dlib,numpy
 from skimage import io
 import cv2
+from math import sqrt
 
 PREDICTOR_PATH = "shape_predictor_68_face_landmarks.dat"
 
@@ -32,7 +33,7 @@ def get_face_mask(im, landmarks):
         hull = cv2.convexHull(landmarks[group])
         cv2.fillConvexPoly(im, hull, 0) 
 
-img = cv2.imread('o2.jpg')
+img = cv2.imread('e.jpg')
 img_copy = img.copy()
 landmarks = get_landmarks(img)
 
@@ -41,20 +42,41 @@ output_img = img-img_copy
 
 output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
 contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
-cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
-
+#cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
 cnt = contours[0]
-M = cv2.moments(cnt)
-cx = int(M['m10']/M['m00'])
-cy = int(M['m01']/M['m00'])
+ellipse = cv2.fitEllipse(cnt)
+(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
+cv2.ellipse(img,ellipse,(0,255,0),2)
+
+leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
+rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
+topmost = tuple(cnt[cnt[:,:,1].argmin()][0])
+bottommost = tuple(cnt[cnt[:,:,1].argmax()][0])
+
+diff1 = abs(leftmost[0] - rightmost[0])
+diff2 = abs(topmost[1] - bottommost[1])
+
+a = diff1/2
+b = diff2/2
+
+eccentricity = sqrt(pow(a,2)-pow(b,2))
+eccentricity = round(eccentricity/a,2)
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-cv2.putText(img,'Centroid = ('+str(cx)+','+str(cy)+')',(10,500), font, 1,(255,0,0),2,16)
-cv2.putText(img,'CntArea = '+str(M['m00']),(10,550), font, 1,(255,0,0),2,16)
-for each_val in M:
-	print each_val, ' : ',M[each_val]
 
-cv2.imwrite('output_o2.jpg',img)
+cv2.putText(img,'Leftmost = '+str(leftmost),(10,100), font, 1,(255,0,0),2,16)
+cv2.putText(img,'Rightmost = '+str(rightmost),(10,150), font, 1,(255,0,0),2,16)
+cv2.line(img,leftmost,rightmost,(255,0,0),2)
+
+cv2.putText(img,'Topmost = '+str(topmost),(10,200), font, 1,(255,0,0),2,16)
+cv2.putText(img,'Bottommost = '+str(bottommost),(10,250), font, 1,(255,0,0),2,16)
+cv2.line(img,topmost,bottommost,(255,0,0),2)
+
+cv2.putText(img,'Diff1 = '+str(diff1)+','+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
+cv2.putText(img,'Diff2 = '+str(diff2)+','+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
+cv2.putText(img,'Eccentricity = '+str(eccentricity),(10,400), font, 1,(255,0,0),2,16)
+
+cv2.imwrite('output_e.jpg',img)
 
 
 cv2.imshow('Mask',img_copy)
