@@ -108,7 +108,7 @@ def hand_track(img):
 			cntr +=1
 
 		font = cv2.FONT_HERSHEY_SIMPLEX
-		cv2.putText(img,"No of finger's = "+str(cntr+1),(10,300), font, 1,(0,255,0),2,16)
+		cv2.putText(img,"No of finger's = "+str(cntr+1),(10,250), font, 1,(0,255,0),2,16)
 
 	try:
 		cv2.imshow('HSV',drawing)
