@@ -45,7 +45,12 @@ def main():
 			cv2.drawContours(drawing,[cnt],0,(0,255,0),2)
 			cv2.drawContours(drawing,[hull],0,(0,0,255),2)
 			hull = cv2.convexHull(cnt,returnPoints = False)
-			defects = cv2.convexityDefects(cnt,hull)
+
+			try:
+				defects = cv2.convexityDefects(cnt,hull)
+			except Exception, e:
+				print e
+			
 			mind=0
 			maxd=0
 			i=0
@@ -60,7 +65,7 @@ def main():
 				start = tuple(cnt[s][0])
 				end = tuple(cnt[e][0])
 				far = tuple(cnt[f][0])
-				if d<10000:
+				if d<12000:
 					continue
 				
 				if far[1] >= cy:
@@ -86,5 +91,4 @@ def main():
 				break
 
 if __name__ == '__main__':
-	time.sleep(1)
 	main()
