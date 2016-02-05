@@ -73,22 +73,25 @@ def main():
 				else:
 					pass
 					#print far[1],cy
-				dist = cv2.pointPolygonTest(cnt,far,True)
+				#dist = cv2.pointPolygonTest(cnt,far,True)
 				cv2.circle(img,far,8,[0,0,255],-1)
 				prev_start = start
 				cntr +=1
 
 			font = cv2.FONT_HERSHEY_SIMPLEX
-			cv2.putText(img,"No of finger's = "+str(cntr),(10,300), font, 1,(0,255,0),2,16)
+			cv2.putText(img,"No of finger's = "+str(cntr+1),(10,300), font, 1,(0,255,0),2,16)
 
-			
+		try:
 			cv2.imshow('HSV',drawing)
-			cv2.imshow('Threshold',thresh)
-			cv2.imshow('BGR',img)
+		except Exception, e:
+			pass	
+		
+		cv2.imshow('Threshold',thresh)
+		cv2.imshow('BGR',img)
 			
-			if cv2.waitKey(20) & 0xFF == ord('q'):	# To move frame by frame
-				print "Pressed Q, quitting!!"
-				break
+		if cv2.waitKey(20) & 0xFF == ord('q'):	# To move frame by frame
+			print "Pressed Q, quitting!!"
+			break
 
 if __name__ == '__main__':
 	main()
