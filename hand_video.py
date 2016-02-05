@@ -19,9 +19,8 @@ def main():
 
 		# Bitwise-AND mask and original image
 		res = cv2.bitwise_and(img,img, mask= mask)
-		#res = cv2.dilate(res,None,iterations=6)
 		res = cv2.cvtColor(res,cv2.COLOR_BGR2GRAY)
-		ret,thresh = cv2.threshold(res,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+		ret,thresh = cv2.threshold(res,0,255,cv2.THRESH_BINARY)
 		contours, hierarchy = cv2.findContours(thresh.copy(),cv2.cv.CV_RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
 		max_area = 0
@@ -61,8 +60,14 @@ def main():
 				start = tuple(cnt[s][0])
 				end = tuple(cnt[e][0])
 				far = tuple(cnt[f][0])
-				if start[1]>cy:
+				if d<10000:
 					continue
+				
+				if far[1] >= cy:
+					continue
+				else:
+					pass
+					#print far[1],cy
 				dist = cv2.pointPolygonTest(cnt,far,True)
 				cv2.circle(img,far,8,[0,0,255],-1)
 				prev_start = start
