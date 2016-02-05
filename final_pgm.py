@@ -159,8 +159,6 @@ def main():
 		else:
 			cv2.putText(img,'Commands = E',(10,450), font, 1,(0,0,255),2,16)
 			
-		cv2.imwrite('output_e3.jpg',img)
-
 		cv2.imshow('Mask',img_copy)
 		cv2.imshow('Output', output_img)
 		cv2.imshow('Img',img)
