@@ -16,7 +16,6 @@ def main():
 	res = cv2.bitwise_and(img,img, mask= mask)
 	res = cv2.cvtColor(res,cv2.COLOR_BGR2GRAY)
 	ret,thresh = cv2.threshold(res,0,255,cv2.THRESH_BINARY)
-	thresh = cv2.dilate(thresh,None,iterations=6)
 	contours, hierarchy = cv2.findContours(thresh.copy(),cv2.cv.CV_RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
 	max_area = 0
