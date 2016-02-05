@@ -34,7 +34,7 @@ def get_face_mask(im, landmarks):
         cv2.fillConvexPoly(im, hull, 0) 
 
 def main():
-	img = cv2.imread('o4.jpg')
+	img = cv2.imread('e3.jpg')
 	img_copy = img.copy()
 	landmarks = get_landmarks(img)
 
@@ -49,42 +49,26 @@ def main():
 	(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
 	cv2.ellipse(img,ellipse,(0,255,0),2)
 
-	leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
-	rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
-	topmost = tuple(cnt[cnt[:,:,1].argmin()][0])
-	bottommost = tuple(cnt[cnt[:,:,1].argmax()][0])
+	
+	a = ma/2
+	b = MA/2
 
-	diff1 = abs(leftmost[0] - rightmost[0])
-	diff2 = abs(topmost[1] - bottommost[1])
-
-	a = diff1/2
-	b = diff2/2
-	a2 = ma/2
-	b2 = MA/2
 
 	eccentricity = sqrt(pow(a,2)-pow(b,2))
 	eccentricity = round(eccentricity/a,2)
 
-	eccentricity2 = sqrt(pow(a2,2)-pow(b2,2))
-	eccentricity2 = round(eccentricity2/a2,2)
-
 	font = cv2.FONT_HERSHEY_SIMPLEX
 
-	"""
-	cv2.putText(img,'Leftmost = '+str(leftmost),(10,100), font, 1,(255,0,0),2,16)
-	cv2.putText(img,'Rightmost = '+str(rightmost),(10,150), font, 1,(255,0,0),2,16)
-	cv2.line(img,leftmost,rightmost,(255,0,0),2)
-
-	cv2.putText(img,'Topmost = '+str(topmost),(10,200), font, 1,(255,0,0),2,16)
-	cv2.putText(img,'Bottommost = '+str(bottommost),(10,250), font, 1,(255,0,0),2,16)
-	cv2.line(img,topmost,bottommost,(255,0,0),2)
-	"""
-	cv2.putText(img,'Diff1 = '+str(diff1)+','+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
-	cv2.putText(img,'Diff2 = '+str(diff2)+','+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-	cv2.putText(img,'Eccentricity = '+str(round(eccentricity,2))+','+str(round(eccentricity2,2)),(10,400), font, 1,(255,0,0),2,16)
-
-	cv2.imwrite('output_o4.jpg',img)
-
+	cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
+	cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
+	cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
+	
+	if(eccentricity < 0.84):
+		cv2.putText(img,'Commands = O',(10,450), font, 1,(0,0,255),2,16)
+	else:
+		cv2.putText(img,'Commands = E',(10,500), font, 1,(0,0,255),2,16)
+		
+	cv2.imwrite('output_e3.jpg',img)
 
 	cv2.imshow('Mask',img_copy)
 	cv2.imshow('Output', output_img)
