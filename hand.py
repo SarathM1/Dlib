@@ -3,7 +3,7 @@ import numpy as np
 
 
 def main():
-	img = cv2.imread('handCmd2.jpg')
+	img = cv2.imread('hand2.jpg')
 	hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
 	# define range of blue color in HSV
@@ -14,10 +14,10 @@ def main():
 
 	# Bitwise-AND mask and original image
 	res = cv2.bitwise_and(img,img, mask= mask)
-	res = cv2.dilate(res,None,iterations=6)
 	res = cv2.cvtColor(res,cv2.COLOR_BGR2GRAY)
-	ret,thresh = cv2.threshold(res,100,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-	contours, hierarchy = cv2.findContours(thresh,cv2.cv.CV_RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+	ret,thresh = cv2.threshold(res,0,255,cv2.THRESH_BINARY)
+	thresh = cv2.dilate(thresh,None,iterations=6)
+	contours, hierarchy = cv2.findContours(thresh.copy(),cv2.cv.CV_RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
 	max_area = 0
 	for i in range(len(contours)):
@@ -30,7 +30,7 @@ def main():
 	M = cv2.moments(cnt)
 	cx = int(M['m10']/M['m00'])
 	cy = int(M['m01']/M['m00'])
-	cv2.circle(img,(cx,cy),20,[255,0,0],-1)
+	cv2.circle(img,(cx,cy),8,[255,0,0],-1)
 
 	hull = cv2.convexHull(cnt)
 	drawing = np.zeros(img.shape,np.uint8)
@@ -49,27 +49,36 @@ def main():
 		start = tuple(cnt[s][0])
 		end = tuple(cnt[e][0])
 		far = tuple(cnt[f][0])
-		if start[1]>cy:
+		
+		if d<10000:
 			continue
-		elif abs(start[0]-prev_start[0]) < 443:
+		
+		if far[1] >= cy:
 			continue
+		else:
+			pass
+			#print far[1],cy
+
+		print d
 		dist = cv2.pointPolygonTest(cnt,far,True)
-		cv2.circle(img,start,20,[0,0,255],-1)
+		cv2.circle(img,far,8,[0,0,255],-1)
 		prev_start = start
 		cntr +=1
 
 	font = cv2.FONT_HERSHEY_SIMPLEX
-	cv2.putText(img,"No of finger's = "+str(cntr),(10,300), font, 5,(0,255,0),8,16)
+	cv2.putText(img,"No of finger's = "+str(cntr),(10,300), font, 1,(0,255,0),2,16)
 
-	#cv2.namedWindow('BGR', cv2.WINDOW_NORMAL)
-	#cv2.namedWindow('HSV', cv2.WINDOW_NORMAL)
-	
-	resized_img = cv2.resize(img, (500, 500)) 
-	resized_drawing = cv2.resize(drawing, (500, 500))
+	cv2.namedWindow('BGR', cv2.WINDOW_NORMAL)
+	cv2.namedWindow('HSV', cv2.WINDOW_NORMAL)
+	cv2.namedWindow('Gray', cv2.WINDOW_NORMAL)
+	#resized_img = cv2.resize(img, (500, 500)) 
+	#resized_drawing = cv2.resize(drawing, (500, 500))
 
-	cv2.imshow('HSV',resized_drawing)
+	cv2.imshow('HSV',drawing)
 	cv2.imwrite('hand_hsv.jpg',drawing)
-	cv2.imshow('BGR',resized_img)
+	cv2.imshow('BGR',img)
+	cv2.imshow("Gray",thresh)
+	
 	cv2.imwrite('hand_ouput.jpg',img)
 	
 	cv2.waitKey()
