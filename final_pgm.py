@@ -116,60 +116,57 @@ def hand_track(img):
 		pass	
 	
 	cv2.imshow('Threshold',thresh)
-	cv2.imshow('BGR',img)
 
 def main():
 	while True:
-		ret,img = cam.read()
-		hand_track(img)
-		if not ret:
-			print "Error opening file"
-			break
-		img_copy = img.copy()
-		landmarks = get_landmarks(img)
-
-		get_face_mask(img_copy, landmarks)
-		output_img = img-img_copy
-
-		output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
-		contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
-		#cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
-		
-		cnt = contours[0]
-		ellipse = cv2.fitEllipse(cnt)
-		(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
-		cv2.ellipse(img,ellipse,(0,255,0),2)
-
-		
-		a = ma/2
-		b = MA/2
-
-
-		eccentricity = sqrt(pow(a,2)-pow(b,2))
-		eccentricity = round(eccentricity/a,2)
-
-		font = cv2.FONT_HERSHEY_SIMPLEX
-
-		cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
-		cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-		cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
-		
-		if(eccentricity < 0.84):
-			cv2.putText(img,'Commands = O',(10,450), font, 1,(0,0,255),2,16)
-		else:
-			cv2.putText(img,'Commands = E',(10,450), font, 1,(0,0,255),2,16)
-			
-		cv2.imshow('Mask',img_copy)
-		cv2.imshow('Output', output_img)
-		cv2.imshow('Img',img)
-
-		if cv2.waitKey(20) & 0xFF == ord('q'):	# To move frame by frame
-				print "Pressed Q, quitting!!"
+		try:
+			ret,img = cam.read()
+			hand_track(img)
+			if not ret:
+				print "Error opening file"
 				break
+			img_copy = img.copy()
+			landmarks = get_landmarks(img)
 
+			get_face_mask(img_copy, landmarks)
+			output_img = img-img_copy
+
+			output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
+			contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
+			#cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
+			
+			cnt = contours[0]
+			ellipse = cv2.fitEllipse(cnt)
+			(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
+			cv2.ellipse(img,ellipse,(0,255,0),2)
+
+			
+			a = ma/2
+			b = MA/2
+
+
+			eccentricity = sqrt(pow(a,2)-pow(b,2))
+			eccentricity = round(eccentricity/a,2)
+
+			font = cv2.FONT_HERSHEY_SIMPLEX
+
+			cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
+			cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
+			cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
+			
+			if(eccentricity < 0.88):
+				cv2.putText(img,'Commands = O',(10,450), font, 1,(0,0,255),2,16)
+			else:
+				cv2.putText(img,'Commands = E',(10,450), font, 1,(0,0,255),2,16)
+				
+			cv2.imshow('Mask',img_copy)
+			cv2.imshow('Output', output_img)
+			cv2.imshow('Img',img)
+
+			if cv2.waitKey(20) & 0xFF == ord('q'):	# To move frame by frame
+					print "Pressed Q, quitting!!"
+					break
+		except ValueError as e:
+			print e
 if __name__ == '__main__':
-	try:
-		main()
-	except ValueError as e:
-		print e
-	
+	main()
