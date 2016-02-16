@@ -8,11 +8,11 @@ import imutils
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 8
+camera.framerate = 16
 rawCapture = PiRGBArray(camera, size=(640, 480))
 print 3
 # allow the camera to warmup
-time.sleep(0.1)
+time.sleep(3)
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_smile.xml')
@@ -24,7 +24,7 @@ def main():
 		# grab the raw NumPy array representing the image, then initialize the timestamp
 		# and occupied/unoccupied text
 		img= frame.array
-		#img = imutils.resize(img, width = 500)
+		img = imutils.resize(img, width = 150)
 
 		gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 		#faces = face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -45,7 +45,8 @@ def main():
 
 		# if the `q` key was pressed, break from the loop
 		if key == ord("q"):
-		    break# import the necessary packages
+			break# import the necessary packages
+		print "Done"
 		
 
 if __name__ == '__main__':

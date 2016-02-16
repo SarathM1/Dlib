@@ -9,6 +9,7 @@ import cv2
 import imutils
 from math import sqrt
 
+print 1
 PREDICTOR_PATH = "shape_predictor_68_face_landmarks.dat"
 
 MOUTH_POINTS = list(range(48, 61))
@@ -16,13 +17,13 @@ OVERLAY_POINTS = [MOUTH_POINTS]
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(PREDICTOR_PATH)
-
+print 2
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 16
+camera.framerate = 8
 rawCapture = PiRGBArray(camera, size=(640, 480))
-
+print 3
 # allow the camera to warmup
 time.sleep(0.1)
 
@@ -47,15 +48,15 @@ def get_face_mask(im, landmarks):
         cv2.fillConvexPoly(im, hull, 0) 
 
 def main():
-	
+	print "\tSTARTING!!"
 	# capture frames from the camera
 	for frame in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
 		# grab the raw NumPy array representing the image, then initialize the timestamp
 		# and occupied/unoccupied text
 		img= frame.array
-		img = imutils.resize(img, width = 500)
-		cv2.imwrite('test.jpg',img)
+		img = imutils.resize(img, width = 200)
 		img_copy = img.copy()
+		cv2.imwrite('lip_reader2.jpg',img)
 		landmarks = get_landmarks(img)
 
 		get_face_mask(img_copy, landmarks)
@@ -80,16 +81,18 @@ def main():
 
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
-		cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
-		cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-		cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
+		#cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
+		#cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
+		#cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
 		
 		if(eccentricity < 0.84):
+			print 'O'
 			cv2.putText(img,'Commands = O',(10,450), font, 1,(0,0,255),2,16)
 		else:
+			print 'E'
 			cv2.putText(img,'Commands = E',(10,450), font, 1,(0,0,255),2,16)
 			
-		cv2.imwrite('output_e3.jpg',img)
+		#cv2.imwrite('output_e3.jpg',img)
 
 		cv2.imshow('Mask',img_copy)
 		cv2.imshow('Output', output_img)
