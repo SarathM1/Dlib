@@ -49,14 +49,12 @@ def get_face_mask(im, landmarks):
 def main():
 	
 	# capture frames from the camera
-	for frame in camera.capture_continuous(rawCapture, format="gbr",use_video_port=True):
+	for frame in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
 		# grab the raw NumPy array representing the image, then initialize the timestamp
 		# and occupied/unoccupied text
 		img= frame.array
 		img = imutils.resize(img, width = 500)
-		#img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 		cv2.imwrite('test.jpg',img)
-		#break
 		img_copy = img.copy()
 		landmarks = get_landmarks(img)
 
