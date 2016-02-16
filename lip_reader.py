@@ -14,7 +14,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(PREDICTOR_PATH)
 
 def get_landmarks(im):
-    rects = detector(im, 1)
+    rects = detector(im, 0)
     
     if len(rects) > 1:
         print 'TooManyFaces'
@@ -34,7 +34,7 @@ def get_face_mask(im, landmarks):
         cv2.fillConvexPoly(im, hull, 0) 
 
 def main():
-	img = cv2.imread('e3.jpg')
+	img = cv2.imread('test.jpg')
 	img_copy = img.copy()
 	landmarks = get_landmarks(img)
 
@@ -68,7 +68,7 @@ def main():
 	else:
 		cv2.putText(img,'Commands = E',(10,500), font, 1,(0,0,255),2,16)
 		
-	cv2.imwrite('output_e3.jpg',img)
+	cv2.imwrite('output_test.jpg',img)
 
 	cv2.imshow('Mask',img_copy)
 	cv2.imshow('Output', output_img)
