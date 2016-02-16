@@ -20,9 +20,9 @@ predictor = dlib.shape_predictor(PREDICTOR_PATH)
 print 2
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.resolution = (640, 480)
-camera.framerate = 8
-rawCapture = PiRGBArray(camera, size=(640, 480))
+camera.resolution = (720, 480)
+camera.framerate = 32
+rawCapture = PiRGBArray(camera, size=(720, 480))
 print 3
 # allow the camera to warmup
 time.sleep(0.1)
@@ -81,16 +81,16 @@ def main():
 
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
-		#cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
-		#cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-		#cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
+		#cv2.putText(img,'ma = '+str(round(ma,2)),(10,100), font, 1,(255,0,0),1,1)
+		#cv2.putText(img,'MA = '+str(round(MA,2)),(10,150), font, 1,(255,0,0),1,1)
+		cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,100), font, 1,(255,0,0),1,1)
 		
 		if(eccentricity < 0.84):
 			print 'O'
-			cv2.putText(img,'Commands = O',(10,450), font, 1,(0,0,255),2,16)
+			cv2.putText(img,'Commands = O',(10,150), font, 1,(0,0,255),1,1)
 		else:
 			print 'E'
-			cv2.putText(img,'Commands = E',(10,450), font, 1,(0,0,255),2,16)
+			cv2.putText(img,'Commands = E',(10,150), font, 1,(0,0,255),1,1)
 			
 		#cv2.imwrite('output_e3.jpg',img)
 
