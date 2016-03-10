@@ -7,10 +7,12 @@
  
 // Pin 13 has an LED connected on most Arduino boards.
 // give it a name:
-int C1B = 12;
-int C1A = 8;
-int C2B = 4;
-int C2A = 2;
+const int C1B = 12;
+const int C1A = 8;
+const int C2B = 4;
+const int C2A = 2;
+const int EN1 = 13;
+const int EN2 = 7;
 
 char data;
 // the setup routine runs once when you press reset:
@@ -21,46 +23,63 @@ void setup() {
   pinMode(C1B, OUTPUT);
   pinMode(C2A, OUTPUT);
   pinMode(C2B, OUTPUT);
+  pinMode(EN2, OUTPUT);
+  pinMode(EN1, OUTPUT);
+}
+
+void start()
+{
+  digitalWrite(EN2, HIGH);   
+  digitalWrite(EN1, HIGH);   
 }
 
 void turn_left()
 {
-  digitalWrite(C1A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C1B, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2B, HIGH);   // turn the LED on (HIGH is the voltage level)
+  start();
+  digitalWrite(C1A, LOW);   
+  digitalWrite(C1B, LOW);   
+  digitalWrite(C2A, LOW);   
+  digitalWrite(C2B, HIGH);  
 }
 
 void turn_right()
 {
-  digitalWrite(C1A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C1B, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2A, HIGH);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2B, LOW);   // turn the LED on (HIGH is the voltage level)
+  start();
+  digitalWrite(C1A, LOW);   
+  digitalWrite(C1B, LOW);   
+  digitalWrite(C2A, HIGH);  
+  digitalWrite(C2B, LOW);   
 }
 
 void fwd()
 {
-  digitalWrite(C1A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C1B, HIGH);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2B, HIGH);   // turn the LED on (HIGH is the voltage level)
+  start();
+  digitalWrite(C1A, LOW);   
+  digitalWrite(C1B, HIGH);  
+  digitalWrite(C2A, LOW);   
+  digitalWrite(C2B, HIGH);  
 }
 
 void back()
 {
-  digitalWrite(C1A, HIGH);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C1B, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2A, HIGH);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2B, LOW);   // turn the LED on (HIGH is the voltage level)
+  start();
+  digitalWrite(C1A, HIGH);  
+  digitalWrite(C1B, LOW);   
+  digitalWrite(C2A, HIGH);  
+  digitalWrite(C2B, LOW);   
 }
 
 void Stop()
 {
-  digitalWrite(C1A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C1B, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2A, LOW);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(C2B, LOW);   // turn the LED on (HIGH is the voltage level)
+  /*
+  digitalWrite(C1A, LOW);   
+  digitalWrite(C1B, LOW);   
+  digitalWrite(C2A, LOW);   
+  digitalWrite(C2B, LOW);   
+  */
+  
+  digitalWrite(EN1, LOW);   
+  digitalWrite(EN2, LOW);   
 }
 
 void loop() {
@@ -74,23 +93,23 @@ void loop() {
     {
       case 'l':
               turn_left();
-              delay(100);               // wait for a second
+              delay(10);    
               Stop();
               break;
       case 'r':
               turn_right();
-              delay(100);               // wait for a second
+              delay(10);    
               Stop();
               break;
       
       case 'f':
               fwd();
-              delay(100);               // wait for a second
+              delay(10);    
               Stop();
               break;
       case 'b':
               back();
-              delay(100);               // wait for a second
+              delay(10);    
               Stop();
               break;
       
